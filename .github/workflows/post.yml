@@ -1,23 +1,37 @@
 name: "Post to Bluesky"
 
-on: workflow_dispatch
-# on:
-#   schedule:
-#     - cron: "30 5,17 * * *"
+on:
+  schedule:
+    - cron: "*/10 * * * *"
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GH_PAT }}
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
           node-version-file: ".nvmrc"
       - run: npm ci
       - run: npm run build
+      - name: Set up Git user
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
       - name: Send post
         run: npm start
         env:
           BSKY_HANDLE: ${{ secrets.BSKY_HANDLE }}
           BSKY_PASSWORD: ${{ secrets.BSKY_PASSWORD }}
+      - name: Commit and push if changes
+        run: |
+          git add .
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Update posted papers" && git push)
+
+
+
+
+
