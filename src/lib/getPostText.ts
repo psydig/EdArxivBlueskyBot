@@ -6,7 +6,7 @@ interface Paper {
   link: string;
 }
 
-const FEED_URL = 'https://osfpreprints-feed.herokuapp.com/EdArXiv.rss';
+const FEED_URL = 'https://osfpreprints-feed.herokuapp.com/PsyArXiv.rss';
 const POSTED_PAPERS_PATH = './postedPapers.json';
 const postedPapers = JSON.parse(fs.readFileSync(POSTED_PAPERS_PATH, 'utf8'));
 
@@ -22,8 +22,10 @@ export default async function getPostText() {
     const currentDate = new Date();
 
     const isAlreadyPosted = postedPapers.papers.some((paper: Paper) => paper.title === item.title && paper.link === item.link);
+const formattedText = `${item.title}: ${item.link}`;
+    const isWithinLengthLimit = formattedText.length <= 290;
 
-    if (!isAlreadyPosted && (currentDate.getTime() - publicationDate.getTime() <= ONE_DAY)) {
+    if (!isAlreadyPosted && (currentDate.getTime() - publicationDate.getTime() <= ONE_DAY) && isWithinLengthLimit) {
       papersToPost.push({
         title: item.title,
         link: item.link,
@@ -34,4 +36,3 @@ export default async function getPostText() {
 
   return papersToPost.length > 0 ? papersToPost : null;
 }
-
