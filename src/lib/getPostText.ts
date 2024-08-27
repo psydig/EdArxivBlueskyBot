@@ -6,7 +6,7 @@ interface Paper {
   link: string;
 }
 
-const FEED_URL = 'https://osfpreprints-feed.herokuapp.com/PsyArXiv.rss';
+const FEED_URL = 'https://osfpreprints-feed.herokuapp.com/EdArXiv.rss';
 const POSTED_PAPERS_PATH = './postedPapers.json';
 const postedPapers = JSON.parse(fs.readFileSync(POSTED_PAPERS_PATH, 'utf8'));
 
