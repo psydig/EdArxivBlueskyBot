@@ -10,7 +10,7 @@ const FEED_URL = 'https://osfpreprints-feed.herokuapp.com/EdArXiv.rss';
 const POSTED_PAPERS_PATH = './postedPapers.json';
 const postedPapers = JSON.parse(fs.readFileSync(POSTED_PAPERS_PATH, 'utf8'));
 
-const ONE_DAY = 24 * 60 * 60 * 1000;  // One day in milliseconds
+const ONE_DAY = 60 * 60 * 1000;  // One hour in milliseconds
 
 export default async function getPostText() {
   const parser = new Parser();
