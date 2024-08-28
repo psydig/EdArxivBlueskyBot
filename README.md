@@ -1,5 +1,5 @@
 # Goal
-PsyArXivBot is a bot tailored for the Bluesky platform. It posts new preprints from PsyArXiv.
+EdArXivBot is a bot tailored for the Bluesky platform. It posts new preprints from PsyArXiv.
 
 # Credits
 This project is based on the bsky-bot Template (https://github.com/philnash/bsky-bot) by Phil Nash (philnash). The foundation provided by the original template was instrumental in the creation of PsyArXivBot.
