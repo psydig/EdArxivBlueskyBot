@@ -10,7 +10,6 @@ const { BskyAgent, RichText } = atproto;
 type BotOptions = {
   service: string | URL;
   dryRun: boolean;
-  maxPostsPerRun: number;
 };
 
 export default class Bot {
@@ -19,7 +18,6 @@ export default class Bot {
   static defaultOptions: BotOptions = {
     service: bskyService,
     dryRun: false,
-    maxPostsPerRun: 20, // Set the maximum number of posts per run here
   } as const;
 
   constructor(service: AtpAgentOpts["service"]) {
@@ -50,24 +48,17 @@ export default class Bot {
   }
 
   static async run(
-    getPostTexts: () => Promise<string[]>, // Changed to return an array of texts
+    getPostText: () => Promise<string>,
     botOptions?: Partial<BotOptions>
   ) {
-    const { service, dryRun, maxPostsPerRun } = botOptions
+    const { service, dryRun } = botOptions
       ? Object.assign({}, this.defaultOptions, botOptions)
       : this.defaultOptions;
     const bot = new Bot(service);
     await bot.login(bskyAccount);
-
-    const texts = await getPostTexts();
-    const textsToPost = texts.slice(0, maxPostsPerRun); // Limit the number of posts per run
-
-    for (const text of textsToPost) {
-      if (!dryRun) {
-        await bot.post(text);
-      }
+    const text = await getPostText();
+    if (!dryRun) {
+      await bot.post(text);
     }
-
-    return textsToPost;
+    return text;
   }
-}
