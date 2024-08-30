@@ -40,5 +40,5 @@ export default async function getPostText() {
     }
   }
 
-  return papersToPost.length > 0 ? papersToPost : [];
+  return papersToPost.length > 0 ? papersToPost : null;
 }
