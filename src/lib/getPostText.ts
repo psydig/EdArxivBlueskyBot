@@ -6,12 +6,12 @@ interface Paper {
   link: string;
 }
 
-const FEED_URL = 'https://osfpreprints-feed.herokuapp.com/EdArXiv.rss';
+const FEED_URL = 'https://osfpreprints-feed.herokuapp.com/MetaArXiv.rss';
 const POSTED_PAPERS_PATH = './postedPapers.json';
 const postedPapers = JSON.parse(fs.readFileSync(POSTED_PAPERS_PATH, 'utf8'));
 
-const ONE_DAY = 24 * 60 * 60 * 1000;  // One day in milliseconds
-const MAX_POSTS_PER_RUN = 20; // Maximum number of papers to post in one run
+const ONE_DAY = 60 * 60 * 1000;  // One hour in milliseconds
+const MAX_POSTS_PER_RUN = 20;    // Maximum number of papers to post in one run
 
 export default async function getPostText() {
   const parser = new Parser();
@@ -30,7 +30,7 @@ export default async function getPostText() {
       papersToPost.push({
         title: item.title,
         link: item.link,
-        formattedText: `${item.title}: ${item.link}`
+        formattedText: formattedText
       });
 
       // Stop if we have reached the maximum number of posts for this run
