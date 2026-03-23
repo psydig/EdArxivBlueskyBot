@@ -6,16 +6,26 @@ interface Paper {
   link: string;
 }
 
-const FEED_URL = 'https://osfpreprints-feed.herokuapp.com/EdArXiv.rss';
+const FEED_URL = 'https://share.osf.io/api/v2/feeds/atom/?elasticQuery=%7B%22bool%22%3A%7B%22filter%22%3A%5B%7B%22term%22%3A%7B%22sources%22%3A%22EdArXiv%22%7D%7D%2C%7B%22term%22%3A%7B%22type%22%3A%22preprint%22%7D%7D%5D%7D%7D';
 const POSTED_PAPERS_PATH = './postedPapers.json';
-const postedPapers = JSON.parse(fs.readFileSync(POSTED_PAPERS_PATH, 'utf8'));
 
-const ONE_DAY = 60 * 60 * 1000;  // One hour in milliseconds
-const MAX_POSTS_PER_RUN = 20;    // Maximum number of papers to post in one run
+function loadPostedPapers() {
+  try {
+    return JSON.parse(fs.readFileSync(POSTED_PAPERS_PATH, 'utf8'));
+  } catch {
+    return { papers: [] };
+  }
+}
+
+const postedPapers = loadPostedPapers();
+
+const ONE_DAY = 24 * 60 * 60 * 1000;  // 24 hours in milliseconds
+const MAX_POSTS_PER_RUN = 20;
 
 export default async function getPostText() {
   const parser = new Parser();
   const feed = await parser.parseURL(FEED_URL);
+
   const papersToPost = [];
 
   for (const item of feed.items) {
@@ -33,7 +43,6 @@ export default async function getPostText() {
         formattedText: formattedText
       });
 
-      // Stop if we have reached the maximum number of posts for this run
       if (papersToPost.length >= MAX_POSTS_PER_RUN) {
         break;
       }
